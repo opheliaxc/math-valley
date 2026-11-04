@@ -1,0 +1,47 @@
+#!/bin/sh
+# Block commits that accidentally include student data, databases, secrets, or dependencies.
+# Install (from repo root):
+#   cp scripts/git-hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+
+set -eu
+
+tmp="${TMPDIR:-/tmp}/mv-pre-commit-blocked.$$"
+: >"$tmp"
+
+git diff --cached --name-only --diff-filter=ACMR | while IFS= read -r path; do
+  [ -n "$path" ] || continue
+  case "$path" in
+    *.db|*.db-wal|*.db-shm)
+      printf '%s\n' "  - ${path}  (SQLite database or sidecar)" >>"$tmp"
+      ;;
+    server/data/.gitkeep)
+      ;;
+    server/data/*)
+      printf '%s\n' "  - ${path}  (runtime data under server/data/ — only .gitkeep is allowed)" >>"$tmp"
+      ;;
+    .env)
+      printf '%s\n' "  - ${path}  (secret env file)" >>"$tmp"
+      ;;
+    .env.*)
+      if [ "$path" != ".env.example" ]; then
+        printf '%s\n' "  - ${path}  (secret env file — only .env.example is allowed)" >>"$tmp"
+      fi
+      ;;
+    node_modules|node_modules/*|*/node_modules/*)
+      printf '%s\n' "  - ${path}  (dependencies — do not commit node_modules)" >>"$tmp"
+      ;;
+  esac
+done
+
+if [ -s "$tmp" ]; then
+  echo "COMMIT BLOCKED: staged files must not include student data, databases, secrets, or node_modules."
+  echo "Blocked paths:"
+  cat "$tmp"
+  echo ""
+  echo "Unstage them (example): git restore --staged <path>"
+  rm -f "$tmp"
+  exit 1
+fi
+
+rm -f "$tmp"
+exit 0
