@@ -1,0 +1,35 @@
+* text=auto
+
+# Source and config as text
+*.js text
+*.mjs text
+*.cjs text
+*.ts text
+*.tsx text
+*.jsx text
+*.json text
+*.md text
+*.html text
+*.css text
+*.svg text
+*.yml text
+*.yaml text
+*.toml text
+*.sh text eol=lf
+
+# Explicitly binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+*.db binary
+*.sqlite binary
+*.sqlite3 binary

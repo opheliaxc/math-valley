@@ -1,0 +1,12 @@
+.mv-visual {
+  display: inline-block;
+  margin: 0;
+  line-height: 0;
+}
+
+.mv-visual-svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}

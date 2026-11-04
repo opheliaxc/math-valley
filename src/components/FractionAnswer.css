@@ -1,0 +1,102 @@
+.mv-fraction-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mv-fraction-entry .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mv-fraction-entry-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.mv-fraction-entry-whole-wrap {
+  display: block;
+  width: 4.75rem;
+  flex-shrink: 0;
+}
+
+.mv-fraction-entry-whole {
+  border-radius: 0.85rem;
+}
+
+.mv-fraction-entry-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: min(100%, 9.5rem);
+}
+
+.mv-fraction-entry-input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 3.5rem;
+  padding: 0.35rem 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: center;
+  color: inherit;
+  background: #1e293b;
+  border: 2px solid #475569;
+  border-radius: 0.85rem;
+}
+
+.mv-fraction-entry-input:focus {
+  outline: none;
+  border-color: #fbbf24;
+  box-shadow: 0 0 0 3px rgb(251 191 36 / 0.35);
+}
+
+.mv-fraction-entry-input:disabled {
+  opacity: 0.5;
+}
+
+.mv-fraction-entry-num {
+  border-bottom: 3px solid currentColor;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-radius: 0.85rem 0.85rem 0 0;
+}
+
+.mv-fraction-entry-den {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.mv-fraction-entry-hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.mv-fraction-entry-submit {
+  width: 100%;
+  min-height: 3.5rem;
+  border: 0;
+  border-radius: 1rem;
+  background: #fbbf24;
+  color: #0f172a;
+  font-size: 1.125rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mv-fraction-entry-submit:disabled {
+  cursor: not-allowed;
+  background: #334155;
+  color: #94a3b8;
+}
