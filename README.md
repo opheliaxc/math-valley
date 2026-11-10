@@ -108,6 +108,18 @@ npm run db:import-json -- [path] [--dry-run]
 npm run db:export-json -- <out-file>
 ```
 
+## Production with Docker (recommended on a server)
+
+Single Compose service, SQLite on named volumes, port **3066**, behind your existing HTTPS reverse proxy.
+
+```bash
+cp .env.example .env
+docker compose up -d --build
+curl -s http://127.0.0.1:3066/api/health
+```
+
+Full guide (first deploy, update/rollback, backup/restore, warnings): **[docs/DEPLOY.md](docs/DEPLOY.md)**.
+
 ## Production (pm2, single instance)
 
 One Node process only — **no pm2 cluster mode**.

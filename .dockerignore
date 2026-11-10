@@ -1,0 +1,77 @@
+# Dependencies — always installed inside the image (correct OS/CPU)
+node_modules/
+**/node_modules/
+
+# Git — not needed to build or run
+.git/
+.gitignore
+.gitattributes
+
+# Build output — rebuilt inside the image
+dist/
+**/dist/
+build/
+coverage/
+.cache/
+*.tsbuildinfo
+
+# Logs and local tooling junk
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Secrets and local env (keep .env.example tracked in Git; still omit from image context)
+.env
+.env.*
+!.env.example
+
+# SQLite databases and sidecars (anywhere)
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Runtime student data and backups (mounted at run time, never baked in)
+server/data/
+**/backups/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.cursor/
+*.sw?
+*~
+
+# Standalone question-generator tooling the production build does not need
+# (src/ is still included — the Vite app imports generators from there)
+question-generator/test-app/
+question-generator/scripts/
+question-generator/.gitignore
+
+# Docs and plans are not required to build the runtime image
+docs/
+*.md
+!README.md
+
+# Local Git hook install copy is not required at runtime build
+scripts/git-hooks/
+
+# Accidental zero-byte junk / harness not needed in the image
+math-valley@0.0.0
+node
+phase2-harness.html
+math-valley-design-doc.md
+nys-math-standards-grades-1-4.md
+nys-math-standards-grades-1-4-2.md
+
+# Docker meta itself need not be copied into later stages via broad COPY .
+Dockerfile*
+docker-compose*.yml
+compose*.yml
+.dockerignore

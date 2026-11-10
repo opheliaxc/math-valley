@@ -1,0 +1,65 @@
+# Math Valley — single-instance Compose (SQLite: never scale this service).
+# No hardcoded platform: — builds natively on whichever machine runs Compose.
+# One-off Intel image on an Apple Silicon Mac:
+#   DOCKER_DEFAULT_PLATFORM=linux/amd64 docker compose build
+
+services:
+  app:
+    build: .
+    image: math-valley:local
+    # Exactly one writer to the SQLite file. Do not add deploy.replicas or scale.
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 30s
+    ports:
+      - "${PORT:-3066}:${PORT:-3066}"
+    env_file:
+      - .env
+    environment:
+      # Paths inside the container (named volumes below). Override via .env if needed.
+      DB_PATH: ${DB_PATH:-/data/math-valley.db}
+      BACKUP_DIR: ${BACKUP_DIR:-/backups}
+      HOST: ${HOST:-0.0.0.0}
+      PORT: ${PORT:-3066}
+      NODE_ENV: ${NODE_ENV:-production}
+      SERVE_STATIC: ${SERVE_STATIC:-1}
+      BACKUP_INTERVAL_HOURS: ${BACKUP_INTERVAL_HOURS:-24}
+      BACKUP_RETENTION: ${BACKUP_RETENTION:-14}
+    volumes:
+      # Separate volumes: database vs backups (easier to copy backups off-box later).
+      - math-valley-data:/data
+      - math-valley-backups:/backups
+    # Hardening: root filesystem read-only; writable only via mounts/tmpfs below.
+    read_only: true
+    tmpfs:
+      - /tmp:size=64M,mode=1777
+      # PID lock file is written under /app/server/data (not on the data volume).
+      - /app/server/data:size=1M,uid=999,gid=999,mode=0755
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    # Generous for a single Node + SQLite process (pm2 ecosystem used 512M as a restart hint).
+    mem_limit: 768m
+    pids_limit: 256
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:'+(process.env.PORT||3066)+'/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 25s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+volumes:
+  math-valley-data:
+  math-valley-backups:
